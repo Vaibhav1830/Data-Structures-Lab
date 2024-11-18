@@ -1,0 +1,146 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int value;
+    struct Node* next;
+};
+
+typedef struct Node* NODE;
+
+NODE getNode() {
+    NODE x = (NODE)malloc(sizeof(struct Node));
+    if (x == NULL) {
+        printf("Memory full\n");
+        exit(0);
+    }
+    return x;
+}
+
+NODE insert_beginning(NODE first, int item){
+    NODE new;
+    new=getNode();
+    new->value=item;
+    new->next=NULL;
+    if (first==NULL){
+        first=new;
+        return first;
+    }
+    new->next=first;
+    first=new;
+    return first;
+}
+
+NODE sort(NODE first){
+    NODE temp1,temp2;
+    if (first==NULL || first->next==NULL)
+        return first;
+    int x;
+    temp1=first;
+    while (temp1->next!=NULL){
+        temp2=temp1->next;
+        while (temp2!=NULL){
+            if (temp1->value>=temp2->value){
+                x=temp1->value;
+                temp1->value=temp2->value;
+                temp2->value=x;
+            }
+            temp2=temp2->next;
+        }
+        temp1=temp1->next;
+    }
+    return first;
+}
+
+NODE reverse(NODE first){
+    NODE current,temp;
+    current=NULL;
+    while (first!=NULL){
+        temp=first;
+        first=first->next;
+        temp->next=current;
+        current=temp;
+    }
+    return current;
+}
+
+NODE concatenate(NODE first1,NODE first2){
+    NODE last1;
+    if (first1==NULL && first2==NULL)
+        return NULL;
+    if (first1==NULL)
+        return first2;
+    if (first2==NULL)
+        return first1;
+    last1=first1;
+    while (last1->next!=NULL)
+        last1=last1->next;
+    last1->next=first2;
+    return first1;
+}
+
+void display(NODE first){
+    NODE temp;
+    if (first==NULL){
+        printf("Linked list is empty");
+    }
+    temp=first;
+    while (temp!=NULL){
+        printf("%d->",temp->value);
+        temp=temp->next;
+    }
+    printf("NULl\n");
+}
+
+int main() {
+    int choice,value,pos;
+    NODE list1=NULL;
+    NODE list2=NULL;
+    while (1) {
+        printf("1. Insert into List 1\n");
+        printf("2. Insert into List 2\n");
+        printf("3. Display List 1\n");
+        printf("4. Display List 2\n");
+        printf("5. Sort List 1\n");
+        printf("6. Reverse List 1\n");
+        printf("7. Concatenate Lists\n");
+        printf("8. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert into List1: ");
+                scanf("%d", &value);
+                list1=insert_beginning(list1,value);
+                break;
+            case 2:
+                printf("Enter value to insert into List2: ");
+                scanf("%d", &value);
+                list2=insert_beginning(list2,value);
+                break;
+            case 3:
+                printf("List1: ");
+                display(list1);
+                break;
+            case 4:
+                printf("List2: ");
+                display(list2);
+                break;
+            case 5:
+                sort(list1);
+                break;
+            case 6:
+                list1=reverse(list1);
+                break;
+            case 7:
+                list1=concatenate(list1,list2);
+                break;
+            case 8:
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+    return 0;
+}
