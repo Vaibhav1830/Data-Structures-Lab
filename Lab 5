@@ -1,0 +1,138 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int value;
+    struct Node* next;
+};
+
+typedef struct Node* NODE;
+
+NODE getNode() {
+    NODE x = (NODE)malloc(sizeof(struct Node));
+    if (x == NULL) {
+        printf("Memory full\n");
+        exit(0);
+    }
+    return x;
+}
+
+NODE insert_beginning(NODE first, int item){
+    NODE new;
+    new=getNode();
+    new->value=item;
+    new->next=NULL;
+    if (first==NULL){
+        first=new;
+        return first;
+    }
+    new->next=first;
+    first=new;
+    return first;
+}
+
+NODE delete_first(NODE first){
+    NODE temp;
+    if (first==NULL){
+        printf("Linked List is empty");
+        return NULL;
+    }
+    temp=first;
+    first=first->next;
+    free(temp);
+    return first;
+}
+
+NODE delete_last(NODE first){
+    NODE prev,last;
+    if (first==NULL){
+        printf("Linked list is empty");
+        return NULL;
+    }
+    prev=NULL;
+    last=first;
+    while (last->next!=NULL){
+        prev=last;
+        last=last->next;
+    }
+    prev->next=NULL;
+    free(last);
+    return first;
+}
+
+NODE delete_value(NODE first,int item){
+    NODE prev=NULL,current=first;
+    if (first==NULL){
+        printf("Linked list is empty");
+        return NULL;
+    }
+    while (current!=NULL && current->value!=item){
+        prev=current;
+        current=current->next;
+    }
+    if (current==NULL){
+        printf("Value is not found in the list\n");
+        return first;
+    }
+    if (prev==NULL)
+        first=current->next;
+    else
+        prev->next=current->next;
+    free(current);
+    return first;
+}
+
+void display(NODE first){
+    NODE temp;
+    if (first==NULL){
+        printf("Linked list is empty");
+    }
+    temp=first;
+    while (temp!=NULL){
+        printf("%d->",temp->value);
+        temp=temp->next;
+    }
+    printf("NULl\n");
+}
+
+int main() {
+    int choice,value,pos;
+    NODE list1=NULL;
+    while (1) {
+        printf("1. Add an Element in List\n");
+        printf("2. Delete First Element\n");
+        printf("3. Delete Last Element\n");
+        printf("4. Delete a Particular Element\n");
+        printf("5. Display List\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                list1=insert_beginning(list1,value);
+                break;
+            case 2:
+                list1=delete_first(list1);
+                break;
+            case 3:
+                list1=delete_last(list1);
+                break;
+            case 4:
+                printf("Enter value to delete: ");
+                scanf("%d",&value);
+                list1=delete_value(list1,value);
+                break;
+            case 5:
+                display(list1);
+                break;
+            case 6:
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+    return 0;
+}
